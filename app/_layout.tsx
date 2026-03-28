@@ -2,7 +2,6 @@ import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from "@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ServicedeskBanner } from "@/components/ServicedeskBanner";
 
@@ -41,16 +40,8 @@ export default function RootLayout() {
     <>
       <StatusBar style="light" />
       <ServicedeskBanner />
-      <Stack
-        screenOptions={{
-          animation: "slide_from_right",
-          animationEnabled: true,
-          ...(Platform.OS === "web" && {
-            contentStyle: { backgroundColor: "#F7F3EE" },
-          }),
-        }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: "none" }} />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="artikel" options={{ headerShown: false }} />
         <Stack.Screen name="huurder" options={{ headerShown: false }} />
       </Stack>

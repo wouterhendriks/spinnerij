@@ -15,11 +15,11 @@ export default function TabLayout() {
           borderTopWidth: 0,
         },
         headerStyle: {
-          backgroundColor: Colors.primary,
+          backgroundColor: Colors.surface,
         },
         headerTitleStyle: {
           fontWeight: "700",
-          color: "#FFFFFF",
+          color: Colors.text,
           fontSize: 17,
         },
         headerShadowVisible: false,
