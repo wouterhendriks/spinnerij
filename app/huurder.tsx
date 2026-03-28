@@ -1,7 +1,10 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, Image, StyleSheet, ScrollView, Pressable, Linking } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, Pressable, Linking, Platform } from "react-native";
+import Animated, { SlideInRight } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
+
+const entering = Platform.OS === "web" ? SlideInRight.duration(250) : undefined;
 
 export default function HuurderScreen() {
   const router = useRouter();
@@ -13,6 +16,7 @@ export default function HuurderScreen() {
   }>();
 
   return (
+    <Animated.View entering={entering} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container} edges={["top"]}>
       {/* Header with back button */}
       <View style={styles.header}>
@@ -67,6 +71,7 @@ export default function HuurderScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </Animated.View>
   );
 }
 

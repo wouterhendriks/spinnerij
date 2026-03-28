@@ -46,7 +46,7 @@ export default function ContactScreen() {
           style={({ pressed }) => [styles.quickAction, pressed && styles.quickActionPressed]}
         >
           <View style={styles.quickActionIconCircle}>
-            <Text style={styles.quickActionIconText}>✆</Text>
+            <Text style={[styles.quickActionIconText, { fontSize: 27 }]}>✆</Text>
           </View>
           <Text style={styles.quickActionLabel}>Bellen</Text>
         </Pressable>

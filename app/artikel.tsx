@@ -1,7 +1,10 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, StyleSheet, ScrollView, Image, Pressable, Linking } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, Pressable, Linking, Platform } from "react-native";
+import Animated, { SlideInRight } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
+
+const entering = Platform.OS === "web" ? SlideInRight.duration(250) : undefined;
 
 export default function ArtikelScreen() {
   const router = useRouter();
@@ -14,6 +17,7 @@ export default function ArtikelScreen() {
   }>();
 
   return (
+    <Animated.View entering={entering} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container} edges={["top"]}>
       {/* Header with back button */}
       <View style={styles.header}>
@@ -45,6 +49,7 @@ export default function ArtikelScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </Animated.View>
   );
 }
 
