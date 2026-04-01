@@ -44,10 +44,10 @@ No test runner or linter is configured.
 
 ## Deployment
 
-- **Vercel**: linked project `spinnerij`, deploy via `./dev web` or manual `vercel deploy --prebuilt --prod`
-- **Build**: `npx expo export --platform web` outputs to `dist/`, then copy to `.vercel/output/static/`
+- **Vercel**: linked project `spinnerij`, auto-deploys on push to `main` via `vercel.json`
+- **Build**: Vercel runs `npx expo export --platform web` automatically, outputs to `dist/`
 - **GitHub**: `wouterhendriks/spinnerij`
-- SPA routing: Vercel config uses catch-all `{ "src": "/(.*)", "dest": "/index.html" }` for client-side routing
+- SPA routing: `vercel.json` catch-all routes all paths to `/index.html`
 
 ## Project Memory
 
