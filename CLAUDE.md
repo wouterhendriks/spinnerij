@@ -20,9 +20,10 @@ No test runner or linter is configured.
 ## Architecture
 
 - **Expo Router** with file-based routing (similar to Next.js App Router)
-- **Tab navigation** with three tabs: Nieuws (news), Huurders (tenants), Contact
-- **Modal routes** for detail screens: `artikel.tsx` (article detail), `huurder.tsx` (tenant detail)
-- `app/(tabs)/index.tsx` redirects to `/nieuws`
+- **Tab navigation** with five tabs: Home, Huurders, Vraag & Aanbod, Reserveren, Melding
+- **Contact page** as non-tab stack screen, accessible via header icon
+- `app/(tabs)/index.tsx` redirects to `/home`
+- No detail pages — news links open spinnerijoosterveld.nl, tenant cards link to websites
 - State is managed with React hooks only (no external state library)
 - Custom hook `useRssFeed` fetches from RSS2JSON API
 
@@ -55,3 +56,8 @@ No test runner or linter is configured.
 - iOS Safari bottom bar clips the tab bar — remove fixed `height` from tabBarStyle and use padding only, plus `viewport-fit=cover` in meta tag
 - RSS feed via rss2json API: `item.content` has full HTML, `item.description` is short — use content for detail pages, description (stripped+truncated) for cards
 - Vercel preview deploys are behind SSO on team accounts — use `--prod` for public URLs
+- `@react-native-picker/picker` renders as an ugly unstyled `<select>` on web — use a custom `Dropdown` component instead (see `components/Dropdown.tsx`)
+- Dropdowns in React Native Web need explicit `zIndex` on the parent container, otherwise they render behind sibling elements
+- Avoid emoji icons in headers/nav — use SVG icons via `react-native-svg` for a professional look
+- WhatsApp links use placeholder number `31534500000` — needs to be replaced with Inge's real number
+- Huurder/room/vraag-aanbod data is hardcoded in `constants/` — planned to move to WebHare backend later

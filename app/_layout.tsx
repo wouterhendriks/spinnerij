@@ -3,7 +3,6 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ServicedeskBanner } from "@/components/ServicedeskBanner";
 
 export {
   ErrorBoundary,
@@ -38,12 +37,10 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar style="light" />
-      <ServicedeskBanner />
+      <StatusBar style="dark" />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="artikel" options={{ headerShown: false }} />
-        <Stack.Screen name="huurder" options={{ headerShown: false }} />
+        <Stack.Screen name="contact" options={{ headerShown: false }} />
       </Stack>
     </>
   );

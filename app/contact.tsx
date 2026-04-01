@@ -1,9 +1,9 @@
 import { ScrollView, View, Text, StyleSheet, Pressable, Linking } from "react-native";
+import { useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 
 const PHONE = "053 - 782 00 00";
 const EMAIL = "servicepunt@spinnerijoosterveld.nl";
-const ADDRESS = "Rigtersbleek Zandvoort 10\n7521 BE Enschede";
 
 const SOCIALS = [
   { name: "Facebook", url: "https://www.facebook.com/SpinnerijOosterveld", icon: "f" },
@@ -28,13 +28,23 @@ function openUrl(url: string) {
 }
 
 export default function ContactScreen() {
+  const router = useRouter();
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Text style={styles.backText}>← Terug</Text>
+      </Pressable>
+
+      <Text style={styles.title}>Contact</Text>
+      <Text style={styles.subtitle}>Neem contact op met De Spinnerij</Text>
+
       {/* Map */}
       <Pressable onPress={openMaps} style={styles.mapContainer}>
         <View style={styles.mapPlaceholder}>
           <Text style={styles.mapIcon}>📍</Text>
           <Text style={styles.mapAddress}>Rigtersbleek Zandvoort 10</Text>
+          <Text style={styles.mapCity}>7521 BE Enschede</Text>
           <Text style={styles.mapText}>Tik om in Google Maps te openen</Text>
         </View>
       </Pressable>
@@ -112,6 +122,14 @@ export default function ContactScreen() {
           ))}
         </View>
       </View>
+
+      {/* Website link */}
+      <Pressable
+        onPress={() => openUrl("https://spinnerijoosterveld.nl")}
+        style={({ pressed }) => [styles.websiteButton, pressed && styles.websiteButtonPressed]}
+      >
+        <Text style={styles.websiteButtonText}>Bezoek onze website →</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -124,9 +142,32 @@ const styles = StyleSheet.create({
   content: {
     paddingBottom: 40,
   },
+  backButton: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 4,
+  },
+  backText: {
+    fontSize: 16,
+    color: Colors.primary,
+    fontWeight: "600",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: Colors.text,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    paddingHorizontal: 16,
+    marginTop: 4,
+    marginBottom: 16,
+  },
   mapContainer: {
     marginHorizontal: 16,
-    marginTop: 16,
     borderRadius: 16,
     overflow: "hidden",
   },
@@ -145,13 +186,20 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "700",
+    marginBottom: 2,
+  },
+  mapCity: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "500",
+    opacity: 0.8,
     marginBottom: 4,
   },
   mapText: {
     color: "#FFFFFF",
     fontSize: 13,
     fontWeight: "500",
-    opacity: 0.7,
+    opacity: 0.6,
   },
   quickActions: {
     flexDirection: "row",
@@ -270,5 +318,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: Colors.text,
+  },
+  websiteButton: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    backgroundColor: Colors.primary,
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  websiteButtonPressed: {
+    opacity: 0.8,
+  },
+  websiteButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
 });
