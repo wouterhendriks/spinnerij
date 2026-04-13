@@ -1,0 +1,29 @@
+<?wh
+
+LOADLIB "wh::javascript.whlib";
+
+LOADLIB "mod::system/lib/database.whlib";
+
+// LOADLIB "mod::publisher/lib/control.whlib";
+// LOADLIB "mod::publisher/lib/siteapi.whlib";
+LOADLIB "mod::publisher/lib/template-v2.whlib";
+
+/*
+wh run mod::spinnerij/webdesigns/spinnerij/scripts/data.whscr
+*/
+
+IF (NOT HavePrimaryTransaction()) // support `wh run`
+{
+  OpenPrimary();
+}
+ELSE // "normal" publication
+{
+  OpenFile(1);
+}
+
+GetPrimary()->BeginWork();
+
+RECORD data := CallJS("mod::spinnerij/webdesigns/spinnerij/scripts/data.ts#getData");
+Print(EncodeJSON(data));
+
+GetPrimary()->RollbackWork();

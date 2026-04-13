@@ -30,6 +30,7 @@
                             height="1pr"
                             deletemode="close"
                             entityeditscreen="#edittenant"
+                            onentitiesdelete="ondeleteentities"
                             selectmultiple="true"
                             wrdtype="tenant">
             <column name="wrd_title" type="text" title="Naam" />
@@ -43,6 +44,7 @@
                             height="1pr"
                             deletemode="close"
                             entityeditscreen="#editsupplydemand"
+                            onentitiesdelete="ondeleteentities"
                             selectmultiple="true"
                             wrdtype="supply_demand">
             <column name="type" type="text" title="Type" />
@@ -57,6 +59,7 @@
                             height="1pr"
                             deletemode="close"
                             entityeditscreen="#editreport"
+                            onentitiesdelete="ondeleteentities"
                             selectmultiple="true"
                             wrdtype="report">
             <column name="category" type="text" title="Categorie" />
@@ -70,6 +73,7 @@
                             height="1pr"
                             deletemode="close"
                             entityeditscreen="#editreservation"
+                            onentitiesdelete="ondeleteentities"
                             selectmultiple="true"
                             wrdtype="reservation">
             <column name="date" type="datetime" title="Datum" />
@@ -98,6 +102,7 @@
                             deletemode="close-denyreferred"
                             entityeditscreen="#editroom"
                             onchangeorder="onroomchangeorder"
+                            onentitiesdelete="ondeleteentities"
                             orderable="true"
                             selectmultiple="true"
                             wrdtype="room">

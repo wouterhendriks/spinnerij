@@ -1,0 +1,22 @@
+<siteprofile xmlns="http://www.webhare.net/xmlns/publisher/siteprofile">
+
+  <rtdtype namespace="http://spinnerijoosterveld.nl/xmlns/spinnerij/defaultrtdtype" allownewwindowlinks="false">
+    <css path="rtd.css" />
+    <blockstyles defaultstyle="NORMAL">
+      <textstyle tag="HEADING1" containertag="h1" textstyles="i u" />
+      <textstyle tag="HEADING2" containertag="h2" textstyles="i u" />
+      <textstyle tag="HEADING3" containertag="h3" textstyles="i u" />
+      <textstyle tag="NORMAL" textstyles="b i u sub sup a-href strike img" />
+      <textstyle tag="UNORDERED" containertag="ul" textstyles="" />
+      <textstyle tag="ORDERED" containertag="ol" textstyles="" />
+      <tablestyle tag="TABLE" />
+    </blockstyles>
+    <widgets>
+      <allowtype type="platform:widgets.anchor" />
+      <allowtype type="platform:widgets.video" />
+
+      <!-- <allowtype type="platform:widgets.html" /> -->
+    </widgets>
+  </rtdtype>
+
+</siteprofile>
