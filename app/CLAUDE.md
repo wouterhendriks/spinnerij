@@ -60,5 +60,7 @@ No test runner or linter is configured.
 - Dropdowns in React Native Web need explicit `zIndex` on the parent container, otherwise they render behind sibling elements
 - Avoid emoji icons in headers/nav — use SVG icons via `react-native-svg` for a professional look
 - WhatsApp links use placeholder number `31534500000` — needs to be replaced with Inge's real number
-- Huurder/room/vraag-aanbod data is hardcoded in `constants/` — planned to move to WebHare backend later
+- Huurder/room/vraag-aanbod data fetched from WebHare JSON endpoint (`/spinnerij/data.json`) via `useSpinnerijData` hook — types in `constants/types.ts`, URL in `constants/api.ts`
+- CORS for data.json is configured via `<webrule>` in siteprl.xml `<sitesettings>` — needed for cross-origin dev (Expo on different port)
+- Images/logos exist in WRD schema but are not yet included in the JSON API — screens use placeholder avatars (ui-avatars.com) and colored blocks
 - App lives inside a WebHare module at `installedmodules/spinnerij/app/` — root has WebHare module files (moduledefinition.xml, language/), app has Expo files

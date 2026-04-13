@@ -1,41 +1,82 @@
-import { ScrollView, View, Text, Image, StyleSheet, Pressable, Linking } from "react-native";
+import { ScrollView, View, Text, StyleSheet, Pressable, Linking, RefreshControl } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { ruimtes } from "@/constants/ruimtes";
+import { useSpinnerijData } from "@/hooks/useSpinnerijData";
 
 const WHATSAPP_BASE = "https://wa.me/31534500000?text=";
 
 export default function ReserverenScreen() {
+  const { data, loading, error, refresh } = useSpinnerijData();
+  const rooms = data?.rooms ?? [];
+
   function handleReserve(roomName: string) {
     const message = encodeURIComponent(`Hoi Inge, ik wil graag ${roomName} reserveren.`);
     Linking.openURL(`${WHATSAPP_BASE}${message}`);
   }
 
+  if (error && !loading) {
+    return (
+      <View style={[styles.container, styles.center]}>
+        <Text style={styles.errorIcon}>⚠</Text>
+        <Text style={styles.errorText}>{error}</Text>
+        <Pressable style={styles.retryButton} onPress={refresh}>
+          <Text style={styles.retryText}>Opnieuw proberen</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  if (loading && rooms.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Reserveren</Text>
+          <Text style={styles.subtitle}>Boek een vergaderruimte</Text>
+          {[1, 2, 3].map((i) => (
+            <View key={i} style={styles.skeletonCard} />
+          ))}
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={Colors.primary} />}
+    >
       <Text style={styles.title}>Reserveren</Text>
       <Text style={styles.subtitle}>Boek een vergaderruimte</Text>
 
-      {ruimtes.map((ruimte) => (
-        <View key={ruimte.id} style={styles.card}>
-          <Image source={{ uri: ruimte.image }} style={styles.cardImage} />
+      {rooms.map((room) => (
+        <View key={room.wrdid} style={styles.card}>
+          <View style={styles.cardImagePlaceholder}>
+            <Text style={styles.cardImageText}>{room.wrdtitle}</Text>
+          </View>
           <View style={styles.cardContent}>
             <Text style={styles.roomName}>
-              {ruimte.name} - {ruimte.subtitle}
+              {room.wrdtitle} - {room.subtitle}
             </Text>
             <View style={styles.capacityBadge}>
               <Text style={styles.capacityIcon}>👥</Text>
-              <Text style={styles.capacityText}>Max. {ruimte.capacity} personen</Text>
+              <Text style={styles.capacityText}>Max. {room.capacity} personen</Text>
             </View>
-            <Text style={styles.description}>{ruimte.description}</Text>
+            <Text style={styles.description}>{room.description}</Text>
             <Pressable
               style={({ pressed }) => [styles.reserveButton, pressed && styles.reserveButtonPressed]}
-              onPress={() => handleReserve(`${ruimte.name} - ${ruimte.subtitle}`)}
+              onPress={() => handleReserve(`${room.wrdtitle} - ${room.subtitle}`)}
             >
               <Text style={styles.reserveButtonText}>Reserveren →</Text>
             </Pressable>
           </View>
         </View>
       ))}
+
+      {rooms.length === 0 && (
+        <View style={styles.empty}>
+          <Text style={styles.emptyText}>Geen ruimtes beschikbaar</Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -74,10 +115,18 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 4,
   },
-  cardImage: {
+  cardImagePlaceholder: {
     width: "100%",
     height: 220,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cardImageText: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    opacity: 0.8,
   },
   cardContent: {
     padding: 18,
@@ -126,5 +175,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: "#FFFFFF",
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorIcon: {
+    fontSize: 32,
+    marginBottom: 12,
+  },
+  errorText: {
+    fontSize: 15,
+    color: Colors.textSecondary,
+    textAlign: "center",
+    marginBottom: 16,
+    paddingHorizontal: 32,
+  },
+  retryButton: {
+    backgroundColor: Colors.accent,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  retryText: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
+  },
+  skeletonCard: {
+    backgroundColor: Colors.skeleton,
+    borderRadius: 16,
+    height: 340,
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  empty: {
+    paddingTop: 40,
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 15,
+    color: Colors.textLight,
   },
 });

@@ -1,29 +1,38 @@
 import { View, Text, Image, StyleSheet, Pressable, Linking } from "react-native";
 import { Colors } from "@/constants/Colors";
-import type { Huurder } from "@/constants/huurders";
+import type { Tenant } from "@/constants/types";
 
 interface TenantCardProps {
-  huurder: Huurder;
+  tenant: Tenant;
 }
 
-export function TenantCard({ huurder }: TenantCardProps) {
+function getAvatarUrl(name: string): string {
+  const initials = name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2);
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=F4A261&color=fff&size=128&font-size=0.4&bold=true`;
+}
+
+export function TenantCard({ tenant }: TenantCardProps) {
   function handleWebsite() {
-    Linking.openURL(huurder.website);
+    Linking.openURL(tenant.website);
   }
 
   return (
     <View style={styles.card}>
       <View style={styles.logoContainer}>
-        <Image source={{ uri: huurder.logo }} style={styles.logo} />
+        <Image source={{ uri: getAvatarUrl(tenant.wrdtitle) }} style={styles.logo} />
       </View>
       <Text style={styles.name} numberOfLines={2}>
-        {huurder.name}
+        {tenant.wrdtitle}
       </Text>
       <Text style={styles.description} numberOfLines={1}>
-        {huurder.description}
+        {tenant.description}
       </Text>
       <View style={styles.roomBadge}>
-        <Text style={styles.roomText}>{huurder.room}</Text>
+        <Text style={styles.roomText}>{tenant.room}</Text>
       </View>
       <Pressable
         style={({ pressed }) => [styles.websiteLink, pressed && styles.websiteLinkPressed]}

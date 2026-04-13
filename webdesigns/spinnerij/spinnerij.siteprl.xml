@@ -1,0 +1,99 @@
+<siteprofile xmlns="http://www.webhare.net/xmlns/publisher/siteprofile">
+
+  <!-- Global site settings -->
+  <apply>
+    <to type="all" />
+
+    <!-- Setup default webdesign -->
+    <webdesign assetpack="spinnerij"
+               async="true"
+               designfolder="."
+               maxcontentwidth="960px"
+               siteresponsefactory="spinnerij.ts#spinnerijDesign"
+               witty="spinnerij.witty"
+               wittyencoding="HTML-NI" />
+
+    <!-- Set site language -->
+    <sitelanguage lang="nl" />
+
+    <!-- Set up a rtdtype -->
+    <rtddoc rtdtype="http://spinnerijoosterveld.nl/xmlns/spinnerij/defaultrtdtype" />
+
+    <!-- Configure widgets -->
+    <videowidget />
+
+    <!-- Republish all files upon every change
+    <republish folder="/" indexonly="false" recursive="true" />
+    -->
+
+    <!-- Enable formsapi
+         To enable (google) recaptcha, add: usecaptcha="1"
+    -->
+    <formintegration />
+
+    <!-- disable keywords field -->
+    <baseproperties keywords="false" />
+
+    <!-- Default types -->
+    <denyfiletype typemask="*" />
+    <allowfiletype typemask="http://www.webhare.net/xmlns/publisher/imagefile" />
+    <allowfiletype typemask="http://www.webhare.net/xmlns/publisher/pdffile" />
+
+    <!--
+    <allowfiletype typedef="http://www.webhare.net/xmlns/publisher/externallink" />
+    <allowfiletype typedef="http://www.webhare.net/xmlns/publisher/internallink" />
+    <allowfiletype typedef="http://www.webhare.net/xmlns/publisher/contentlink" />
+    -->
+    <allowfiletype typemask="http://www.webhare.net/xmlns/publisher/richdocumentfile" />
+    <allowfiletype typemask="http://www.webhare.net/xmlns/publisher/formwebtool" />
+    <denyfoldertype typemask="*" />
+    <allowfoldertype typemask="http://www.webhare.net/xmlns/publisher/normalfolder" />
+
+    <!-- Downloadable Word docs -->
+    <allowfiletype typemask="http://www.webhare.net/xmlns/publisher/msworddownload" />
+    <uploadtypemapping filetype="http://www.webhare.net/xmlns/publisher/msworddownload" mimetypemask="application/msword" />
+    <uploadtypemapping filetype="http://www.webhare.net/xmlns/publisher/msworddownload"
+                       mimetypemask="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+  </apply>
+
+  <!-- Live only settings, eg analytics -->
+  <apply minservertype="production">
+    <to type="all" />
+
+    <!-- Pick one of:
+    <googleanalytics account="UA-XXXXXXX-X" anonymizeip="true" />
+    <gtm account="GTM-XXXXXX" />
+    -->
+  </apply>
+
+  <filetype namespace="http://spinnerijoosterveld.nl/filetype/data"
+            kind="rawfile"
+            extensions=".json"
+            icon="tollium:files/text_plain"
+            isacceptableindex="true"
+            title="Spinnerij - JSON data voor app">
+    <usepublishtemplate script="mod::spinnerij/webdesigns/spinnerij/scripts/data.whscr" />
+    <setobjecteditor name="publisher:texteditor" />
+  </filetype>
+
+  <!-- Other siteprofile imports (applysiteprofile) must always be at end of this primary siteprofile -->
+  <applysiteprofile path="shared/rtd/rtd.siteprl.xml" />
+
+  <sitesettings>
+    <webruleset xmlns="http://www.webhare.net/xmlns/system/moduledefinition">
+      <webrule path="/data.json" match="exact">
+        <addheader header="Access-Control-Allow-Origin" value="*" />
+      </webrule>
+      <webrule path="/" match="initial">
+        <!-- A nice initial security policy - better to remove than having to add later -->
+        <addheader header="X-Frame-Options" value="DENY" />
+        <addheader header="X-XSS-Protection" value="1; mode=block" />
+        <addheader header="X-Content-Type-Options" value="nosniff" />
+        <addheader header="Referrer-Policy" value="strict-origin-when-cross-origin" />
+        <addheader header="Feature-Policy" value="geolocation 'none'; camera 'none'; payment 'none'; microphone 'none'" />
+        <csp policy="script-src 'self'; frame-ancestors 'self' [webhare]" />
+      </webrule>
+    </webruleset>
+  </sitesettings>
+
+</siteprofile>

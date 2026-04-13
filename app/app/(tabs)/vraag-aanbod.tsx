@@ -1,11 +1,20 @@
-import { useState } from "react";
-import { ScrollView, View, Text, Image, StyleSheet, Pressable, Linking } from "react-native";
+import { useState, useMemo } from "react";
+import { ScrollView, View, Text, StyleSheet, Pressable, Linking, RefreshControl } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { vraagAanbodItems, type VraagAanbodType } from "@/constants/vraagAanbod";
+import { useSpinnerijData } from "@/hooks/useSpinnerijData";
+import type { SupplyDemandItem } from "@/constants/types";
 
 const WHATSAPP_URL = "https://wa.me/31534500000?text=Hoi%20Inge%2C%20ik%20wil%20graag%20iets%20plaatsen%20op%20Vraag%20%26%20Aanbod";
 
 type Filter = "alles" | "vraag" | "aanbod";
+
+function formatDate(isoDate: string): string {
+  return new Date(isoDate).toLocaleDateString("nl-NL", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 function FilterTabs({ active, onChange }: { active: Filter; onChange: (f: Filter) => void }) {
   const tabs: { key: Filter; label: string }[] = [
@@ -31,7 +40,7 @@ function FilterTabs({ active, onChange }: { active: Filter; onChange: (f: Filter
   );
 }
 
-function TypeBadge({ type }: { type: VraagAanbodType }) {
+function TypeBadge({ type }: { type: SupplyDemandItem["type"] }) {
   const isAanbod = type === "aanbod";
   return (
     <View style={[styles.typeBadge, isAanbod ? styles.typeBadgeAanbod : styles.typeBadgeVraag]}>
@@ -43,11 +52,15 @@ function TypeBadge({ type }: { type: VraagAanbodType }) {
 }
 
 export default function VraagAanbodScreen() {
+  const { data, loading, error, refresh } = useSpinnerijData();
   const [filter, setFilter] = useState<Filter>("alles");
 
-  const filtered = filter === "alles"
-    ? vraagAanbodItems
-    : vraagAanbodItems.filter((item) => item.type === filter);
+  const items = data?.supplydemanditems ?? [];
+
+  const filtered = useMemo(
+    () => (filter === "alles" ? items : items.filter((item) => item.type === filter)),
+    [items, filter],
+  );
 
   function handleAdd() {
     Linking.openURL(WHATSAPP_URL);
@@ -57,9 +70,42 @@ export default function VraagAanbodScreen() {
     Linking.openURL(`mailto:${email}`);
   }
 
+  if (error && !loading) {
+    return (
+      <View style={[styles.container, styles.center]}>
+        <Text style={styles.errorIcon}>⚠</Text>
+        <Text style={styles.errorText}>{error}</Text>
+        <Pressable style={styles.retryButton} onPress={refresh}>
+          <Text style={styles.retryText}>Opnieuw proberen</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  if (loading && items.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.headerRow}>
+            <View style={styles.headerText}>
+              <Text style={styles.title}>Vraag & Aanbod</Text>
+              <Text style={styles.subtitle}>Deel en vind hulp binnen de community</Text>
+            </View>
+          </View>
+          {[1, 2, 3].map((i) => (
+            <View key={i} style={styles.skeletonCard} />
+          ))}
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={Colors.primary} />}
+      >
         <View style={styles.headerRow}>
           <View style={styles.headerText}>
             <Text style={styles.title}>Vraag & Aanbod</Text>
@@ -76,16 +122,13 @@ export default function VraagAanbodScreen() {
         <FilterTabs active={filter} onChange={setFilter} />
 
         {filtered.map((item) => (
-          <View key={item.id} style={styles.card}>
-            {item.image && (
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
-            )}
+          <View key={item.wrdid} style={styles.card}>
             <View style={styles.cardContent}>
               <View style={styles.cardTopRow}>
                 <TypeBadge type={item.type} />
-                <Text style={styles.cardDate}>{item.date}</Text>
+                <Text style={styles.cardDate}>{formatDate(item.date)}</Text>
               </View>
-              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardTitle}>{item.wrdtitle}</Text>
               <Text style={styles.cardDescription}>{item.description}</Text>
               <View style={styles.authorRow}>
                 <Text style={styles.authorIcon}>📋</Text>
@@ -198,11 +241,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 2,
   },
-  cardImage: {
-    width: "100%",
-    height: 200,
-    backgroundColor: Colors.skeleton,
-  },
   cardContent: {
     padding: 16,
   },
@@ -289,5 +327,38 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 15,
     color: Colors.textLight,
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorIcon: {
+    fontSize: 32,
+    marginBottom: 12,
+  },
+  errorText: {
+    fontSize: 15,
+    color: Colors.textSecondary,
+    textAlign: "center",
+    marginBottom: 16,
+    paddingHorizontal: 32,
+  },
+  retryButton: {
+    backgroundColor: Colors.accent,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  retryText: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
+  },
+  skeletonCard: {
+    backgroundColor: Colors.skeleton,
+    borderRadius: 16,
+    height: 200,
+    marginHorizontal: 16,
+    marginBottom: 12,
   },
 });
