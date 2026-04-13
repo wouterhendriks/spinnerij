@@ -1,0 +1,67 @@
+<schemadefinition xmlns="http://www.webhare.net/xmlns/wrd/schemadefinition" xml:lang="nl">
+
+  <!-- Rooms (managed via Settings screen) -->
+  <domain tag="room" title="Ruimte">
+    <attributes>
+      <free tag="wrd_title" required="1" />
+      <free tag="subtitle" />
+      <integer tag="capacity" />
+      <free tag="description" />
+      <image tag="image" />
+      <integer tag="wrd_ordering" />
+    </attributes>
+  </domain>
+
+  <!-- Tenants -->
+  <object tag="tenant" title="Huurder">
+    <attributes>
+      <free tag="wrd_title" required="1" />
+      <free tag="description" />
+      <free tag="category" />
+      <free tag="room" />
+      <image tag="logo" />
+      <free tag="website" />
+    </attributes>
+  </object>
+
+  <!-- Supply & Demand -->
+  <object tag="supply_demand" title="Vraag &amp; Aanbod">
+    <attributes>
+      <enum tag="type" allowedvalues="vraag aanbod" required="1" />
+      <free tag="wrd_title" required="1" />
+      <free tag="description" />
+      <free tag="author" />
+      <free tag="organization" />
+      <email tag="email" />
+      <datetime tag="date" />
+      <image tag="image" />
+    </attributes>
+  </object>
+
+  <!-- Reports -->
+  <object tag="report" title="Melding">
+    <attributes>
+      <enum tag="category"
+            allowedvalues="verlichting verwarming_klimaat sanitair schoonmaak lift parkeren veiligheid overig"
+            required="1" />
+      <free tag="description" required="1" />
+      <free tag="reporter_name" />
+      <email tag="reporter_email" />
+      <enum tag="status" allowedvalues="open in_behandeling afgehandeld" required="1" />
+      <image tag="photo" />
+    </attributes>
+  </object>
+
+  <!-- Reservations -->
+  <object tag="reservation" title="Reservering">
+    <attributes>
+      <domainsingle tag="room" domain="room" required="1" />
+      <datetime tag="date" required="1" />
+      <free tag="requester_name" />
+      <email tag="requester_email" />
+      <free tag="description" />
+      <enum tag="status" allowedvalues="aangevraagd bevestigd geannuleerd" required="1" />
+    </attributes>
+  </object>
+
+</schemadefinition>

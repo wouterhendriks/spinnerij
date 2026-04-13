@@ -1,0 +1,79 @@
+<?wh
+
+LOADLIB "mod::tollium/lib/screenbase.whlib";
+LOADLIB "mod::wrd/lib/screenbase.whlib";
+LOADLIB "mod::wrd/lib/api.whlib";
+
+PUBLIC STATIC OBJECTTYPE Main EXTEND TolliumScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+
+  MACRO DoSettings()
+  {
+    this->RunScreen("#settings");
+  }
+
+  MACRO DoExit()
+  {
+    this->tolliumresult := "close";
+  }
+>;
+
+PUBLIC STATIC OBJECTTYPE Settings EXTEND TolliumScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+
+  MACRO OnRoomChangeOrder(OBJECT wrdtype, INTEGER ARRAY rowkeys)
+  {
+    OBJECT work := this->BeginUnvalidatedWork();
+    FOREVERY (INTEGER rowkey FROM rowkeys)
+      wrdtype->UpdateEntity(rowkey, [ wrd_ordering := #rowkey + 1 ]);
+    work->Finish();
+  }
+>;
+
+PUBLIC STATIC OBJECTTYPE EditTenant EXTEND WRDEntityEditScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+>;
+
+PUBLIC STATIC OBJECTTYPE EditRoom EXTEND WRDEntityEditScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+>;
+
+PUBLIC STATIC OBJECTTYPE EditSupplyDemand EXTEND WRDEntityEditScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+>;
+
+PUBLIC STATIC OBJECTTYPE EditReport EXTEND WRDEntityEditScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+>;
+
+PUBLIC STATIC OBJECTTYPE EditReservation EXTEND WRDEntityEditScreenBase
+<
+  MACRO NEW()
+  {
+    this->contexts->wrdschema := OpenWRDSchema("spinnerij:spinnerij");
+  }
+>;

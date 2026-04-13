@@ -1,0 +1,270 @@
+<screens xmlns="http://www.webhare.net/xmlns/tollium/screens"
+         xmlns:wrd="http://www.webhare.net/xmlns/wrd/components"
+         library="main.whlib">
+
+  <!-- ===== MAIN SCREEN ===== -->
+  <screen name="main" allowresize="true" menubar="menubar" title="Spinnerij">
+    <actions>
+      <action name="exit" onexecute="doexit" tid="~exit" />
+      <action name="settings" onexecute="dosettings" title="Instellingen" />
+    </actions>
+
+    <menus>
+      <menu name="menubar">
+        <item title="Bestand">
+          <item action="settings" />
+          <divider />
+          <item action="exit" />
+        </item>
+      </menu>
+    </menus>
+
+    <toolbar name="toolbar">
+      <button action="settings" icon="tollium:objects/cog2" title="Instellingen" />
+    </toolbar>
+
+    <body spacers="none">
+      <tabs height="1pr" savestate="selectedtab">
+        <tab title="Huurders">
+          <wrd:entitiesedit name="tenants"
+                            height="1pr"
+                            deletemode="close"
+                            entityeditscreen="#edittenant"
+                            selectmultiple="true"
+                            wrdtype="tenant">
+            <column name="wrd_title" type="text" title="Naam" />
+            <column name="category" type="text" title="Categorie" />
+            <column name="room" type="text" title="Ruimte" />
+            <column name="website" type="text" title="Website" />
+          </wrd:entitiesedit>
+        </tab>
+        <tab title="Vraag &amp; Aanbod">
+          <wrd:entitiesedit name="supplydemand"
+                            height="1pr"
+                            deletemode="close"
+                            entityeditscreen="#editsupplydemand"
+                            selectmultiple="true"
+                            wrdtype="supply_demand">
+            <column name="type" type="text" title="Type" />
+            <column name="wrd_title" type="text" title="Titel" />
+            <column name="author" type="text" title="Auteur" />
+            <column name="organization" type="text" title="Organisatie" />
+            <column name="date" type="datetime" title="Datum" />
+          </wrd:entitiesedit>
+        </tab>
+        <tab title="Meldingen">
+          <wrd:entitiesedit name="reports"
+                            height="1pr"
+                            deletemode="close"
+                            entityeditscreen="#editreport"
+                            selectmultiple="true"
+                            wrdtype="report">
+            <column name="category" type="text" title="Categorie" />
+            <column name="description" type="text" title="Omschrijving" />
+            <column name="reporter_name" type="text" title="Melder" />
+            <column name="status" type="text" title="Status" />
+          </wrd:entitiesedit>
+        </tab>
+        <tab title="Reserveringen">
+          <wrd:entitiesedit name="reservations"
+                            height="1pr"
+                            deletemode="close"
+                            entityeditscreen="#editreservation"
+                            selectmultiple="true"
+                            wrdtype="reservation">
+            <column name="date" type="datetime" title="Datum" />
+            <column name="requester_name" type="text" title="Aanvrager" />
+            <column name="description" type="text" title="Doel" />
+            <column name="status" type="text" title="Status" />
+          </wrd:entitiesedit>
+        </tab>
+      </tabs>
+    </body>
+  </screen>
+
+  <!-- ===== SETTINGS SCREEN (Ruimtes) ===== -->
+  <screen name="settings"
+          minwidth="700px"
+          minheight="500px"
+          allowresize="true"
+          footerbuttons="close"
+          savestate="size"
+          title="Instellingen">
+    <body spacers="none">
+      <tabs height="1pr">
+        <tab title="Ruimtes">
+          <wrd:entitiesedit name="rooms"
+                            height="1pr"
+                            deletemode="close-denyreferred"
+                            entityeditscreen="#editroom"
+                            onchangeorder="onroomchangeorder"
+                            orderable="true"
+                            selectmultiple="true"
+                            wrdtype="room">
+            <column name="wrd_title" type="text" title="Naam" />
+            <column name="subtitle" type="text" title="Subtitle" />
+            <column name="capacity" type="integer" title="Capaciteit" />
+          </wrd:entitiesedit>
+        </tab>
+      </tabs>
+    </body>
+  </screen>
+
+  <!-- ===== EDIT TENANT ===== -->
+  <screen name="edittenant"
+          minwidth="600px"
+          minheight="400px"
+          allowresize="true"
+          footerbuttons="ok cancel"
+          savestate="size"
+          title="Bewerk huurder">
+    <compositions>
+      <wrd:entity name="entity" wrdtype="tenant" />
+    </compositions>
+
+    <body>
+      <textedit composition="entity" cellname="wrd_title" width="1pr" required="true" title="Naam" />
+      <textedit composition="entity" cellname="description" width="1pr" title="Omschrijving" />
+      <textedit composition="entity" cellname="category" width="1pr" title="Categorie" />
+      <textedit composition="entity" cellname="room" width="1pr" title="Ruimte" />
+      <textedit composition="entity" cellname="website" width="1pr" title="Website" />
+      <imgedit composition="entity"
+               cellname="logo"
+               width="200px"
+               height="200px"
+               allowedactions="all refpoint"
+               publisher="false"
+               title="Logo" />
+    </body>
+  </screen>
+
+  <!-- ===== EDIT ROOM ===== -->
+  <screen name="editroom"
+          minwidth="600px"
+          minheight="400px"
+          allowresize="true"
+          footerbuttons="ok cancel"
+          savestate="size"
+          title="Bewerk ruimte">
+    <compositions>
+      <wrd:entity name="entity" wrdtype="room" />
+    </compositions>
+
+    <body>
+      <textedit composition="entity" cellname="wrd_title" width="1pr" required="true" title="Naam" />
+      <textedit composition="entity" cellname="subtitle" width="1pr" title="Subtitle" />
+      <textedit composition="entity" cellname="capacity" width="20x" title="Capaciteit" valuetype="integer" />
+      <textarea composition="entity" cellname="description" width="1pr" height="4x" title="Omschrijving" />
+      <imgedit composition="entity"
+               cellname="image"
+               width="300px"
+               height="200px"
+               allowedactions="all refpoint"
+               publisher="false"
+               title="Afbeelding" />
+    </body>
+  </screen>
+
+  <!-- ===== EDIT SUPPLY/DEMAND ===== -->
+  <screen name="editsupplydemand"
+          minwidth="600px"
+          minheight="400px"
+          allowresize="true"
+          footerbuttons="ok cancel"
+          savestate="size"
+          title="Bewerk vraag/aanbod">
+    <compositions>
+      <wrd:entity name="entity" wrdtype="supply_demand" />
+    </compositions>
+
+    <body>
+      <select composition="entity" cellname="type" type="pulldown" required="true" title="Type">
+        <option rowkey="" invalidselection="true" title="-- Kies type --" />
+        <option rowkey="vraag" title="Vraag" />
+        <option rowkey="aanbod" title="Aanbod" />
+      </select>
+      <textedit composition="entity" cellname="wrd_title" width="1pr" required="true" title="Titel" />
+      <textarea composition="entity" cellname="description" width="1pr" height="3x" title="Omschrijving" />
+      <textedit composition="entity" cellname="author" width="1pr" title="Auteur" />
+      <textedit composition="entity" cellname="organization" width="1pr" title="Organisatie" />
+      <textedit composition="entity" cellname="email" width="1pr" title="E-mail" />
+      <datetime composition="entity" cellname="date" type="date" title="Datum" />
+      <imgedit composition="entity"
+               cellname="image"
+               width="300px"
+               height="200px"
+               allowedactions="all refpoint"
+               publisher="false"
+               title="Afbeelding" />
+    </body>
+  </screen>
+
+  <!-- ===== EDIT REPORT ===== -->
+  <screen name="editreport"
+          minwidth="600px"
+          minheight="400px"
+          allowresize="true"
+          footerbuttons="ok cancel"
+          savestate="size"
+          title="Bewerk melding">
+    <compositions>
+      <wrd:entity name="entity" wrdtype="report" />
+    </compositions>
+
+    <body>
+      <select composition="entity" cellname="category" type="pulldown" required="true" title="Categorie">
+        <option rowkey="" invalidselection="true" title="-- Kies categorie --" />
+        <option rowkey="verlichting" title="Verlichting" />
+        <option rowkey="verwarming_klimaat" title="Verwarming / klimaat" />
+        <option rowkey="sanitair" title="Sanitair" />
+        <option rowkey="schoonmaak" title="Schoonmaak" />
+        <option rowkey="lift" title="Lift" />
+        <option rowkey="parkeren" title="Parkeren" />
+        <option rowkey="veiligheid" title="Veiligheid" />
+        <option rowkey="overig" title="Overig" />
+      </select>
+      <textarea composition="entity" cellname="description" width="1pr" height="4x" required="true" title="Omschrijving" />
+      <textedit composition="entity" cellname="reporter_name" width="1pr" title="Melder" />
+      <textedit composition="entity" cellname="reporter_email" width="1pr" title="E-mail melder" />
+      <select composition="entity" cellname="status" type="pulldown" required="true" title="Status">
+        <option rowkey="open" title="Open" />
+        <option rowkey="in_behandeling" title="In behandeling" />
+        <option rowkey="afgehandeld" title="Afgehandeld" />
+      </select>
+      <imgedit composition="entity"
+               cellname="photo"
+               width="300px"
+               height="200px"
+               allowedactions="all refpoint"
+               publisher="false"
+               title="Foto" />
+    </body>
+  </screen>
+
+  <!-- ===== EDIT RESERVATION ===== -->
+  <screen name="editreservation"
+          minwidth="600px"
+          minheight="400px"
+          allowresize="true"
+          footerbuttons="ok cancel"
+          savestate="size"
+          title="Bewerk reservering">
+    <compositions>
+      <wrd:entity name="entity" wrdtype="reservation" />
+    </compositions>
+
+    <body>
+      <wrd:selectentity composition="entity" cellname="room" type="pulldown" required="true" title="Ruimte" />
+      <datetime composition="entity" cellname="date" type="datetime" required="true" title="Datum &amp; tijd" />
+      <textedit composition="entity" cellname="requester_name" width="1pr" title="Aanvrager" />
+      <textedit composition="entity" cellname="requester_email" width="1pr" title="E-mail aanvrager" />
+      <textarea composition="entity" cellname="description" width="1pr" height="3x" title="Doel" />
+      <select composition="entity" cellname="status" type="pulldown" required="true" title="Status">
+        <option rowkey="aangevraagd" title="Aangevraagd" />
+        <option rowkey="bevestigd" title="Bevestigd" />
+        <option rowkey="geannuleerd" title="Geannuleerd" />
+      </select>
+    </body>
+  </screen>
+
+</screens>

@@ -1,0 +1,3 @@
+<group xmlns="http://www.webhare.net/xmlns/system/testinfo">
+  <test name="api" script="api.unittest.ts" />
+</group>
