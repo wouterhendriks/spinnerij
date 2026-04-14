@@ -45,7 +45,7 @@ No test runner or linter is configured.
 
 ## Deployment
 
-- **WebHare**: `./dev webhare` builds Expo web and copies to `web/dist/` in the module root, then deploy with `wh devkit:push`
+- **WebHare**: `./dev webhare` (from module root) builds Expo web and copies to `web/dist/` in the module root, then deploy with `wh devkit:push`
 - **Build**: `scripts/build-webhare.sh` handles font relocation, .ttf→.woff2 conversion, and filename lowercasing for WebHare compatibility
 - **Hosting**: Webruleset `spinnerij-app` in `moduledefinition.xml` serves the SPA via `handlebydir` + `handlebyscript` fallbacks
 - **GitHub**: `webwerf/spinnerij`
@@ -58,7 +58,7 @@ No test runner or linter is configured.
 - `@react-native-picker/picker` renders as an ugly unstyled `<select>` on web — use a custom `Dropdown` component instead (see `components/Dropdown.tsx`)
 - Dropdowns in React Native Web need explicit `zIndex` on the parent container, otherwise they render behind sibling elements
 - Avoid emoji icons in headers/nav — use SVG icons via `react-native-svg` for a professional look
-- WhatsApp links use placeholder number `31534500000` — needs to be replaced with Inge's real number
+- WhatsApp number centralized in `constants/api.ts` as `WHATSAPP_NUMBER` / `WHATSAPP_BASE` — all screens import from there
 - Huurder/room/vraag-aanbod data fetched from WebHare JSON endpoint (`/spinnerij/data.json`) via `useSpinnerijData` hook — types in `constants/types.ts`, URL in `constants/api.ts`
 - CORS for data.json is configured via `<webrule>` in siteprl.xml `<sitesettings>` — needed for cross-origin dev (Expo on different port)
 - Images/logos exist in WRD schema but are not yet included in the JSON API — screens use placeholder avatars (ui-avatars.com) and colored blocks

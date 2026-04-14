@@ -8,7 +8,7 @@
 #   ./dev webhare            Web deployen (WebHare)
 #
 # Tab completion: add to ~/.bash_profile:
-#   eval "$(~/whrunkit/myserver/whdata/installedmodules/spinnerij/app/dev --completions)"
+#   eval "$(~/whrunkit/myserver/whdata/installedmodules/spinnerij/dev --completions)"
 
 if [ "$1" = "--completions" ]; then
   echo 'complete -W "start webhare wh --help" ./dev'
@@ -16,7 +16,7 @@ if [ "$1" = "--completions" ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-MODULE_DIR="$(dirname "$SCRIPT_DIR")"
+APP_DIR="$SCRIPT_DIR/app"
 
 show_help() {
   echo ""
@@ -40,7 +40,7 @@ do_start() {
   echo "Dev server starten..."
   echo "  → npx expo start --web"
   echo ""
-  npx expo start --web
+  cd "$APP_DIR" && npx expo start --web
 }
 
 # ──────────────────────────────────────────────
@@ -72,22 +72,22 @@ do_webhare() {
 
   # Check for uncommitted changes in the module
   local DIRTY=""
-  if [ -n "$(git -C "$MODULE_DIR" status --porcelain)" ]; then
+  if [ -n "$(git -C "$SCRIPT_DIR" status --porcelain)" ]; then
     DIRTY="uncommitted"
   fi
-  if [ -n "$(git -C "$MODULE_DIR" log --oneline "@{u}..HEAD" 2>/dev/null)" ]; then
+  if [ -n "$(git -C "$SCRIPT_DIR" log --oneline "@{u}..HEAD" 2>/dev/null)" ]; then
     [ -n "$DIRTY" ] && DIRTY="$DIRTY + unpushed" || DIRTY="unpushed"
   fi
   if [ -n "$DIRTY" ]; then
     echo ""
     echo "⚠️  spinnerij module heeft $DIRTY changes."
-    git -C "$MODULE_DIR" status --short
+    git -C "$SCRIPT_DIR" status --short
     echo ""
   fi
 
   echo ""
   echo "Building..."
-  "$MODULE_DIR/scripts/build-webhare.sh" $BUILD_FLAG || return 1
+  "$SCRIPT_DIR/scripts/build-webhare.sh" $BUILD_FLAG || return 1
 
   if [ "$DEPLOY" = true ]; then
     echo ""
