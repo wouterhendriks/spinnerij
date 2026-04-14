@@ -5,6 +5,7 @@ import { SymbolView } from "expo-symbols";
 import { Colors } from "@/constants/Colors";
 import { Logo } from "@/components/Logo";
 import Svg, { Path } from "react-native-svg";
+import { SpinnerijDataProvider } from "@/providers/SpinnerijDataProvider";
 
 function ContactIcon() {
   return (
@@ -34,6 +35,7 @@ function HeaderRight() {
 
 export default function TabLayout() {
   return (
+    <SpinnerijDataProvider>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.tabBarActive,
@@ -138,6 +140,7 @@ export default function TabLayout() {
       {/* Hide redirect screens */}
       <Tabs.Screen name="index" options={{ href: null }} />
     </Tabs>
+    </SpinnerijDataProvider>
   );
 }
 

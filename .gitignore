@@ -2,6 +2,8 @@
 /node_modules
 /localtests
 /tsconfig.json
+.playwright-mcp/
+app/.playwright-mcp/
 
 # macOS
 .DS_Store
